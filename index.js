@@ -31,6 +31,7 @@ async function run() {
         client.connect();
 
         const usersCollections = client.db("MicroDB").collection("users");
+        const reviewCollections = client.db("MicroDB").collection("reviews");
 
         // Users Api
         app.post('/users', async (req, res) => {
@@ -41,6 +42,21 @@ async function run() {
                 return res.send({ message: "user already exist" })
             }
             const result = await usersCollections.insertOne(user);
+            res.send(result)
+        })
+
+        // Get reviews
+
+        app.get('/reviews', async (req, res) => {
+            const result = await reviewCollections.find().toArray()
+            res.send(result)
+        })
+
+        // Post a review
+
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollections.insertOne(review)
             res.send(result)
         })
 
